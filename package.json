@@ -1,0 +1,43 @@
+{
+  "_from": "react-native-share-image",
+  "_id": "react-native-share-image@1.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-ts51xWGrCLWSpdShTGLB8DVrh+20mKr9KQZdzddgHgXXzi2Mq525kktSHIzq71eHLh9iVrW+7i6MhYDzkwIoow==",
+  "_location": "/react-native-share-image",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-share-image",
+    "name": "react-native-share-image",
+    "escapedName": "react-native-share-image",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-share-image/-/react-native-share-image-1.0.0.tgz",
+  "_shasum": "a3299964704d02afd8e2455e8082b0a6922eb284",
+  "_spec": "react-native-share-image",
+  "_where": "C:\\Users\\tolulope.thomas\\WebstormProjects\\quickteller-mobile-v3(fix)",
+  "author": "Tolu Thomas (tolu.thomas@protonmail.com)",
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "## Grab and share screenshots, as well as share images using their content uri",
+  "keywords": [
+    "react-native", "share", "screenshot", "share screenshot", "image", "share image"
+  ],
+  "license": "",
+  "main": "index.js",
+  "name": "react-native-share-image",
+  "peerDependencies": {
+    "react-native": ">=0.60.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.2"
+}
