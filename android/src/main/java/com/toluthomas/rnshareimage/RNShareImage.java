@@ -1,5 +1,5 @@
 
-package com.interswitch.rnshareimage;
+package com.toluthomas.rnshareimage;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

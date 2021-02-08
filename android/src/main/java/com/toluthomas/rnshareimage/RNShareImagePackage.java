@@ -1,5 +1,5 @@
 
-package com.interswitch.rnshareimage;
+package com.toluthomas.rnshareimage;
 
 import java.lang.annotation.Native;
 import java.util.ArrayList;
