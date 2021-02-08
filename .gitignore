@@ -27,7 +27,11 @@ Pods/
 #
 .idea
 *.iml
-android/.gradle
+.project
+.classpath
+local.properties
+.gradle
+android/.idea
 android/.settings
 android/build
 android/gradle
