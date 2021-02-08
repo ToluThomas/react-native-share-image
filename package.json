@@ -7,7 +7,7 @@
   "bundleDependencies": false,
   "deprecated": false,
   "description": "## Grab and share screenshots, as well as share images using their content uri",
-  "homepage": "https://github.com/ToluThomas/react-native-share-image",
+  "homepage": "https://github.com/ToluThomas/react-native-share-image#readme",
   "keywords": [
     "react-native", "share", "screenshot", "share screenshot", "image", "share image"
   ],
