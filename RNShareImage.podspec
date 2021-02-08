@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/ToluThomas/react-native-share-image.git", :tag => "#{s.version}" }
   s.source_files  = "ios/**/*.{h,m}"
   s.requires_arc = true
-  s.dependency "React"
+  s.dependency "React-Core"
 end
 
   
