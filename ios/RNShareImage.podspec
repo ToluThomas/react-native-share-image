@@ -1,17 +1,17 @@
+require 'json'
+
+package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
 Pod::Spec.new do |s|
-  s.name         = "RNShareImage"
-  s.version      = "1.0.0"
-  s.summary      = "RNShareImage"
-  s.description  = <<-DESC
-                  RNShareImage
-                   DESC
-  s.homepage     = ""
-  s.license      = "MIT"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
-  s.author             = { "author" => "author@domain.cn" }
+  s.name           = package['name']
+  s.version        = package['version']
+  s.summary        = package['summary']
+  s.description    = package['description']
+  s.author         = package['author']['name']
+  s.license        = package['license']
+  s.homepage       = package['homepage']
   s.platform     = :ios, "10.0"
-  s.source       = { :git => "https://github.com/author/RNShareImage.git", :tag => "master" }
+  s.source       = { :git => "https://github.com/ToluThomas/react-native-share-image.git", :tag => "#{s.version}" }
   s.source_files  = "RNShareImage/**/*.{h,m}"
   s.requires_arc = true
 
