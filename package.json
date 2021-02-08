@@ -1,28 +1,4 @@
 {
-  "_from": "react-native-share-image",
-  "_id": "react-native-share-image@1.0.2",
-  "_inBundle": false,
-  "_integrity": "sha512-ts51xWGrCLWSpdShTGLB8DVrh+20mKr9KQZdzddgHgXXzi2Mq525kktSHIzq71eHLh9iVrW+7i6MhYDzkwIoow==",
-  "_location": "/react-native-share-image",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "react-native-share-image",
-    "name": "react-native-share-image",
-    "escapedName": "react-native-share-image",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/react-native-share-image/-/react-native-share-image-1.0.0.tgz",
-  "_shasum": "a3299964704d02afd8e2455e8082b0a6922eb284",
-  "_spec": "react-native-share-image",
-  "_where": "/Users/tt/projects",
   "author": {
     "name": "Tolu Thomas",
     "email": "tolu.thomas@protonmail.com",
