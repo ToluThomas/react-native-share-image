@@ -20,9 +20,9 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-RNShareImage.xcworkspace
-RNShareImage.h
-RNShareImage.m
+contents.xcworkspacedata
+*.h
+*.m
 Pods/
 
 # Android/IJ
