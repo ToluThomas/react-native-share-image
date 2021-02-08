@@ -23,16 +23,22 @@
   "_shasum": "a3299964704d02afd8e2455e8082b0a6922eb284",
   "_spec": "react-native-share-image",
   "_where": "C:\\Users\\tolulope.thomas\\WebstormProjects\\quickteller-mobile-v3(fix)",
-  "author": "Tolu Thomas (tolu.thomas@protonmail.com)",
+  "author": {
+    "name": "Tolu Thomas",
+    "email": "tolu.thomas@protonmail.com",
+    "url": "https://github.com/ToluThomas"
+  },
   "bundleDependencies": false,
   "deprecated": false,
   "description": "## Grab and share screenshots, as well as share images using their content uri",
+  "homepage": "https://github.com/ToluThomas/react-native-share-image",
   "keywords": [
     "react-native", "share", "screenshot", "share screenshot", "image", "share image"
   ],
-  "license": "",
+  "license": "MIT",
   "main": "index.js",
   "name": "react-native-share-image",
+  "summary": "React Native library to share screenshots",
   "peerDependencies": {
     "react-native": ">=0.60.0"
   },
