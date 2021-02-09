@@ -6,21 +6,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.core.content.FileProvider;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.uimanager.util.ReactFindViewUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -39,31 +35,32 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     public String getName() {
         return "RNShareImage";
     }
+
     // Take screenshot and share
     @ReactMethod
-    public void shareScreenshot() {
-        Intent intent = getIntent();
+    public void shareScreenshot(String subject, String filename, String id) {
+        Intent intent = getIntent(subject);
         try {
-            File imageFile = getScreenshotFile(getTempImageFile());
+            File imageFile = getScreenshotFile(getTempImageFile(filename), id != null ? getPartialView(id) : this.getRootView());
             Uri imageUri = getImageUri(imageFile);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share receipt using ..."));
+            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share screenshot via"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     // Share image from content Uri
     @ReactMethod
-    public void shareImageFromUri(String imageUri){
-        Intent intent = getIntent();
+    public void shareImageFromUri(String imageUri, String subject){
+        Intent intent = getIntent(subject);
         intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-        Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share receipt using ..."));
+        Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share image via"));
     }
 
-    private Intent getIntent(){
-        String MESSAGE_SUBJECT = "Quickteller Receipt";
+    private Intent getIntent(String subject){
         Intent intent = new Intent();
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, MESSAGE_SUBJECT);
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
         intent.setAction(Intent.ACTION_SEND);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -71,45 +68,37 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return intent;
     }
 
-    private File getScreenshotFile(File imageFile) throws IOException {
+    private File getScreenshotFile(File imageFile, View view) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(imageFile);
-        getScreenshotBitmap().compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+        getScreenshotBitmap(view).compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
         fileOutputStream.flush();
         fileOutputStream.close();
         return imageFile;
     }
 
     private View getRootView() {
-        return Objects.requireNonNull(getCurrentActivity()).findViewById(android.R.id.content);
+        return Objects.requireNonNull(getCurrentActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
     }
 
-    private View getCurrentView(){
-        ViewGroup rootViewGroup = (ViewGroup) getRootView();
-        return rootViewGroup.getChildAt(0);
-    }
+    private View getPartialView(String id){
+        return ReactFindViewUtil.findView(getRootView(), id);
+    };
 
-    private Bitmap getScreenshotBitmap() {
-        View screenView = getCurrentView();
-        screenView.setDrawingCacheEnabled(true);
+    private Bitmap getScreenshotBitmap(View view) {
+        view.setDrawingCacheEnabled(true);
         // Create bitmap from the screenshot and return it
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        System.out.println("Screenshot Bitmap: " + bitmap.toString());
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
         return bitmap;
     }
 
-    private String getFileName() {
-        //Image file is named as a datetime and saved as a png file
-        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss", Locale.UK).format(new Date());
-        return "Quickteller_" + timeStamp + "_";
-    }
 
     private File getStorageDirectory() {
         return reactContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     }
 
-    private File getTempImageFile() throws IOException {
-        return File.createTempFile(this.getFileName(), ".png", getStorageDirectory());
+    private File getTempImageFile(String filename) throws IOException {
+        return File.createTempFile(filename, ".png", getStorageDirectory());
     }
 
     private Uri getImageUri(File imageFile) {
