@@ -1,11 +1,31 @@
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 
-  // Show warning if native module isn't detected
- if (!NativeModules.RNShareImage)
-   console.warn("RNShareImage could not find native module. Please make sure native module is properly linked.");
+const DEFAULT_MESSAGE = "I'd like to share this screenshot with you";
 
-   // Share screenshot (takes screenshot and opens share options)
-export const shareScreenshot = () => NativeModules.RNShareImage.shareScreenshot();
+// Show warning if native module isn't detected
+if (!NativeModules.RNShareImage) {
+  console.warn(
+    'RNShareImage could not find native module. Please make sure native module is properly linked.',
+  );
+}
 
-// Share image from uri (content uri for Android)
-export const shareImageFromUri = (uri) => NativeModules.RNShareImage.shareImageFromUri(uri);
+/**
+ * Share screenshot of current app screen or specify a view to get screenshot of
+ * @param {string} message - Message to be shown during share
+ * @param {string} filename - name of temporary screenshot file
+ * @param {string} id - ID for a View which is set using the nativeID prop for Views
+ * @see {@link https://reactnative.dev/docs/view#nativeid} for how to set ID
+ */
+export const shareScreenshot = (
+  message = DEFAULT_MESSAGE,
+  filename = new Date().getTime().toString(),
+  id = null,
+) => NativeModules.RNShareImage.shareScreenshot(message, filename, id);
+
+/**
+ * Share image using uri of an image
+ * @param {string} imageUri - Specify a content uri for image to be shared
+ * @param {string} message - Message to be shown during share
+ */
+export const shareImageFromUri = (imageUri, message = DEFAULT_MESSAGE) =>
+  NativeModules.RNShareImage.shareImageFromUri(imageUri, message);
