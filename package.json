@@ -12,7 +12,7 @@
     "react-native", "share", "screenshot", "share screenshot", "image", "share image"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "index",
   "name": "react-native-share-image",
   "summary": "React Native library to share screenshots",
   "peerDependencies": {
