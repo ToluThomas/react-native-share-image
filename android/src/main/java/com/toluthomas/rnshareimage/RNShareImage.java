@@ -1,4 +1,3 @@
-
 package com.toluthomas.rnshareimage;
 
 import android.content.Intent;
@@ -82,7 +81,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
 
     private View getPartialView(String id){
         return ReactFindViewUtil.findView(getRootView(), id);
-    };
+    }
 
     private Bitmap getScreenshotBitmap(View view) {
         view.setDrawingCacheEnabled(true);
