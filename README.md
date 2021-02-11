@@ -18,7 +18,7 @@
 		<external-files-path name="external_files" path="." />
 	</paths>
 	```
-3. Navigate to your app AndroidManifest.xml (likely in yourProject/android/app/src/main/AndroidManifest.xml) and add <provider> like below:
+3. Navigate to your app AndroidManifest.xml (likely in yourProject/android/app/src/main/AndroidManifest.xml) and add ```<provider>``` like below:
 	```
 	<application
         android:name=".MainApplication"
@@ -43,15 +43,16 @@
 `$ react-native link react-native-share-image`
 
 ##### If linking does not work still
-5. Open up `android/app/src/main/java/[...]/MainActivity.java`
+1. Open up `android/app/src/main/java/[...]/MainActivity.java`
   - Add `import com.reactlibrary.RNShareImagePackage;` to the imports at the top of the file
   - Add `new RNShareImagePackage()` to the list returned by the `getPackages()` method
-6. Append the following lines to `android/settings.gradle`:
+2. Append the following lines to `android/settings.gradle`:
   	```
   	include ':react-native-share-image'
-  	project(':react-native-share-image').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-share-image/android')
+  	project(':react-native-share-image').projectDir = new File(rootProject.projectDir,
+	  '../node_modules/react-native-share-image/android')
   	```
-7. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
+3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
   	```
       compile project(':react-native-share-image')
   	```
