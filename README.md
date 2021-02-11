@@ -7,9 +7,9 @@
 
 #### Android
 
-1. Create filepaths.xml at android/app/src/main/res/xml/filepaths.xml (if it does not already exist)
+1. Create filepaths.xml at `android/app/src/main/res/xml/filepaths.xml` (if it does not already exist)
 2. Add below to filepaths.xml:
-	```
+	```xml
 	<?xml version="1.0" encoding="utf-8"?>
 	<paths xmlns:android="http://schemas.android.com/apk/res/android">
 		<external-path name="myexternalimages" path="Download/" />
@@ -18,8 +18,8 @@
 		<external-files-path name="external_files" path="." />
 	</paths>
 	```
-3. Navigate to your app AndroidManifest.xml (check android/app/src/main/AndroidManifest.xml) and add ```<provider>``` like below:
-	```
+3. Navigate to your app AndroidManifest.xml (check `android/app/src/main/AndroidManifest.xml`) and add `<provider>` like below:
+	```xml
 	<application
         android:name=".MainApplication"
         android:label="@string/app_name"
@@ -37,7 +37,7 @@
                 android:resource="@xml/filepaths"/>
         </provider>
 	```
-4. If React Native version >= 0.60 you're good to go. react-native-share-image is auto-linked and set up.
+4. If React Native version >= 0.60 you're good to go! react-native-share-image is auto-linked and set up!
 
 ##### If package is not auto-linked
 `$ react-native link react-native-share-image`
@@ -47,13 +47,13 @@
 2. Add `import com.toluthomas.RNShareImagePackage;` to the imports at the top of the file
 3. Add `new RNShareImagePackage()` to the list returned by the `getPackages()` method
 4. Append the following lines to `android/settings.gradle`:
-  	```
+  	```groovy
   	include ':react-native-share-image'
   	project(':react-native-share-image').projectDir = new File(rootProject.projectDir,
 	  '../node_modules/react-native-share-image/android')
   	```
 5. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
+  	```groovy
       compile project(':react-native-share-image')
   	```
 
@@ -68,7 +68,7 @@ import {shareScreenshot, shareImageFromUri} from 'react-native-share-image';
 shareScreenshot('message', 'filename');
 
 // To take screenshot of a specific view and share
-shareScreenshot('message', 'filename', 'IDofView');
+shareScreenshot('message', 'filename', 'viewID');
 
 // To share an image from a content uri
 shareImageFromUri('someStringUri', 'message')
