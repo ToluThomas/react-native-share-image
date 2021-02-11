@@ -5,9 +5,9 @@
 
 `$ npm install react-native-share-image --save`
 
-#### Android
+### Android
 
-1. Create filepaths.xml at `android/app/src/main/res/xml/filepaths.xml` (if it does not already exist)
+1. Create `filepaths.xml` at `android/app/src/main/res/xml/filepaths.xml` (if it does not already exist)
 2. Add below to filepaths.xml:
 	```xml
 	<?xml version="1.0" encoding="utf-8"?>
@@ -18,7 +18,7 @@
 		<external-files-path name="external_files" path="." />
 	</paths>
 	```
-3. Navigate to your app AndroidManifest.xml (check `android/app/src/main/AndroidManifest.xml`) and add `<provider>` like below:
+3. Navigate to your app `AndroidManifest.xml` (check `android/app/src/main/AndroidManifest.xml`) and add `<provider>` like below:
 	```xml
 	<application
         android:name=".MainApplication"
@@ -37,12 +37,12 @@
                 android:resource="@xml/filepaths"/>
         </provider>
 	```
-4. If React Native version >= 0.60 you're good to go! react-native-share-image is auto-linked and set up!
+4. If React Native version >= 0.60 you're good to go! **react-native-share-image** is auto-linked and set up!
 
-##### If package is not auto-linked
+#### If package is not auto-linked
 `$ react-native link react-native-share-image`
 
-##### If linking does not work still
+#### If linking does not work still
 1. Open up `android/app/src/main/java/[...]/MainActivity.java`
 2. Add `import com.toluthomas.RNShareImagePackage;` to the imports at the top of the file
 3. Add `new RNShareImagePackage()` to the list returned by the `getPackages()` method
@@ -57,7 +57,7 @@
       compile project(':react-native-share-image')
   	```
 
-#### iOS
+### iOS
 Will be updated when iOS is supported ...
 
 ## Usage
