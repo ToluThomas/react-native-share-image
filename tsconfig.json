@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "moduleResolution": "node",
+        "jsx": "react",
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "allowSyntheticDefaultImports":true,
+        "target": "es2020",
+        "module": "ES2020",
+        "declaration": true,
+        "noImplicitAny": true,
+        "importHelpers": true
+      },
+      "include": [
+        "index.d.ts",
+      ],
+      "compileOnSave": false
+    }
