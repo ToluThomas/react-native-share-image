@@ -39,8 +39,10 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     @ReactMethod
     public void shareScreenshot(String id, String subject, String filename) {
         Intent intent = getIntent(subject);
+        View view = id != null ? getPartialView(id) : this.getRootView();
+        
         try {
-            File imageFile = getScreenshotFile(getTempImageFile(filename), id != null ? getPartialView(id) : this.getRootView());
+            File imageFile = getScreenshotFile(getTempImageFile(filename), view);
             Uri imageUri = getImageUri(imageFile);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
             Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share screenshot via"));
@@ -83,15 +85,12 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return ReactFindViewUtil.findView(getRootView(), id);
     }
 
+    // Generate a bitmap
     private Bitmap getScreenshotBitmap(View view) {
-        // If a partial view is available, use that. Otherwise, use the root view
-        View screenView = view != null ? view : this.getRootView();
-
-        // Create bitmap from the screenshot and return it
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getWidth(), screenView.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        screenView.layout(screenView.getLeft(), screenView.getTop(), screenView.getRight(), screenView.getBottom());
-        screenView.draw(canvas);
+        view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        view.draw(canvas);
         return bitmap;
     }
 
