@@ -13,15 +13,15 @@ if (!NativeModules.RNShareImage) {
 
 /**
  * Share screenshot of current app screen or specify a view to get screenshot of
- * @param {string} message - Message to be shown during share
- * @param {string} filename - name of temporary screenshot file
  * @param {string} id - ID for a View which is set using the nativeID prop for Views
  * @link See https://reactnative.dev/docs/view#nativeid for how to set nativeID
+ * @param {string} message - Message to be shown during share
+ * @param {string} filename - name of temporary screenshot file
  */
 export const shareScreenshot = (
-  message = DEFAULT_MESSAGE,
-  filename = new Date().getTime().toString(),
   id = null,
+  message = DEFAULT_MESSAGE,
+  filename = new Date().getTime().toString()
 ) => NativeModules.RNShareImage.shareScreenshot(message, filename, id);
 
 /**
