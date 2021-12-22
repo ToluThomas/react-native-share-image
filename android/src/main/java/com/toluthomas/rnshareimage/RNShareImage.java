@@ -38,11 +38,11 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     // Take screenshot and share
     @ReactMethod
     public void shareScreenshot(String id, String subject, String filename) {
-        Intent intent = getIntent(subject);
-        View view = id != null ? getPartialView(id) : this.getRootView();
-        
         try {
-            File imageFile = getScreenshotFile(getTempImageFile(filename), view);
+            Intent intent = getIntent(subject);
+            View view = id != null ? getPartialView(id) : this.getRootView();
+            File tempImageFile = getTempImageFile(filename);
+            File imageFile = getScreenshotFile(tempImageFile, view);
             Uri imageUri = getImageUri(imageFile);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
             Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share screenshot via"));
