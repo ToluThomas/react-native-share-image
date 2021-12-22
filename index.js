@@ -22,7 +22,7 @@ export const shareScreenshot = (
   id = null,
   message = DEFAULT_MESSAGE,
   filename = new Date().getTime().toString()
-) => NativeModules.RNShareImage.shareScreenshot(message, filename, id);
+) => NativeModules.RNShareImage.shareScreenshot(id, message, filename);
 
 /**
  * Share image using uri of an image
