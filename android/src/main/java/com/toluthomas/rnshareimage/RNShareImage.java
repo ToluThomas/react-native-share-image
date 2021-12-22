@@ -2,6 +2,7 @@ package com.toluthomas.rnshareimage;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
@@ -53,7 +54,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
 
     // Share image from content Uri
     @ReactMethod
-    public void shareImageFromUri(String imageUri, String subject, String title){
+    public void shareImageFromUri(String imageUri, String subject, String title) {
         try {
             Intent intent = getIntent(subject);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
@@ -61,10 +62,10 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
-    private Intent getIntent(String subject){
+    private Intent getIntent(String subject) {
         Intent intent = new Intent();
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
         intent.setAction(Intent.ACTION_SEND);
@@ -83,10 +84,11 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     }
 
     private View getRootView() {
-        return Objects.requireNonNull(getCurrentActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
+        return Objects.requireNonNull(getCurrentActivity()).getWindow().getDecorView()
+                .findViewById(android.R.id.content);
     }
 
-    private View getPartialView(String id){
+    private View getPartialView(String id) {
         return ReactFindViewUtil.findView(getRootView(), id);
     }
 
@@ -99,7 +101,6 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return bitmap;
     }
 
-
     private File getStorageDirectory() {
         return reactContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     }
@@ -109,6 +110,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     }
 
     private Uri getImageUri(File imageFile) {
-        return FileProvider.getUriForFile(reactContext, Objects.requireNonNull(getCurrentActivity()).getPackageName() + ".provider", imageFile);
+        return FileProvider.getUriForFile(reactContext,
+                Objects.requireNonNull(getCurrentActivity()).getPackageName() + ".provider", imageFile);
     }
 }
