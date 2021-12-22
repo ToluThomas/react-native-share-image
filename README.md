@@ -54,7 +54,7 @@
   	```
 5. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
   	```groovy
-      compile project(':react-native-share-image')
+      implementation project(':react-native-share-image')
   	```
 
 ### iOS
