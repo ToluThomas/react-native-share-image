@@ -1,7 +1,12 @@
 
 # react-native-share-image
 
-## Getting started
+## Table of Contents
+
+- [Getting Started](#Installation)
+- [API](#API)
+
+## Installation
 
 `$ npm install react-native-share-image --save`
 
@@ -60,17 +65,33 @@
 ### iOS
 Will be updated when iOS is supported ...
 
-## Usage
+## API
+| Method                                                            | Return Type   |  iOS | Android |
+| ----------------------------------------------------------------- | ------------- | :--: | :-----: |
+| [shareScreenshot()](#shareScreenshot)                             | `void`        |  ❌  |   ✅    |
+| [shareImageFromUri()](#shareImageFromUri)                         | `void`        |  ❌  |   ✅    |
+---
+
+### shareScreenshot()
 ```javascript
-import {shareScreenshot, shareImageFromUri} from 'react-native-share-image';
+import {shareScreenshot} from 'react-native-share-image';
 
 // To take screenshot and share
-shareScreenshot();
-
-// To take screenshot of a specific view and share
-shareScreenshot('nativeID');
-
-// To share an image from a content uri
-shareImageFromUri('imageURI')
+shareScreenshot(); // Shares whole screen
+shareScreenshot('nativeID'); // Shares view with nativeID
+shareScreenshot(null, 'customMessage'); // Shares screenshot with a message that shows when user shares image
+shareScreenshot(null, null, 'filename'); // Shares screenshot with a specific filename
+shareScreenshot(null, null, null, 'customTitle'); // Shares screenshot with a specific title
 ```
-  
+---
+
+### shareImageFromUri()
+```javascript
+import {shareImageFromUri} from 'react-native-share-image';
+
+// To share image URI
+shareImageFromUri('imageURI'); // Shares image of specified imageURI
+shareImageFromUri('imageURI', 'customMessage'); // Shares image with a message that shows when user shares image
+shareImageFromUri('imageURI', null, 'customTitle'); // Shares image with a specific title
+```
+---
