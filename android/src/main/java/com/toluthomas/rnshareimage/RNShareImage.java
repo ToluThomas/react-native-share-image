@@ -37,7 +37,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
 
     // Take screenshot and share
     @ReactMethod
-    public void shareScreenshot(String id, String subject, String filename) {
+    public void shareScreenshot(String id, String subject, String filename, String title) {
         try {
             Intent intent = getIntent(subject);
             View view = id != null ? getPartialView(id) : this.getRootView();
@@ -45,7 +45,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
             File imageFile = getImageFile(tempImageFile, view);
             Uri imageUri = getImageUri(imageFile);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share screenshot via"));
+            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, title));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,11 +53,11 @@ public class RNShareImage extends ReactContextBaseJavaModule {
 
     // Share image from content Uri
     @ReactMethod
-    public void shareImageFromUri(String imageUri, String subject){
+    public void shareImageFromUri(String imageUri, String subject, String title){
         try {
             Intent intent = getIntent(subject);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share image via"));
+            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, title));
         } catch (Exception e) {
             e.printStackTrace();
         }
