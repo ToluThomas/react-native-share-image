@@ -65,12 +65,12 @@ Will be updated when iOS is supported ...
 import {shareScreenshot, shareImageFromUri} from 'react-native-share-image';
 
 // To take screenshot and share
-shareScreenshot('message', 'filename');
+shareScreenshot();
 
 // To take screenshot of a specific view and share
-shareScreenshot('message', 'filename', 'viewID');
+shareScreenshot('nativeID');
 
 // To share an image from a content uri
-shareImageFromUri('someStringUri', 'message')
+shareImageFromUri('imageURI')
 ```
   
