@@ -36,7 +36,6 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return "RNShareImage";
     }
 
-    // Take screenshot and share
     @ReactMethod
     public void shareScreenshot(String id, String subject, String filename, String title) {
         try {
@@ -52,7 +51,6 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         }
     }
 
-    // Share image from content Uri
     @ReactMethod
     public void shareImageFromUri(String imageUri, String subject, String title) {
         try {
@@ -92,7 +90,6 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return ReactFindViewUtil.findView(getRootView(), id);
     }
 
-    // Generate a bitmap
     private Bitmap getScreenshotBitmap(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
