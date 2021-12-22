@@ -42,7 +42,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
             Intent intent = getIntent(subject);
             View view = id != null ? getPartialView(id) : this.getRootView();
             File tempImageFile = getTempImageFile(filename);
-            File imageFile = getScreenshotFile(tempImageFile, view);
+            File imageFile = getImageFile(tempImageFile, view);
             Uri imageUri = getImageUri(imageFile);
             intent.putExtra(Intent.EXTRA_STREAM, imageUri);
             Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, "Share screenshot via"));
@@ -69,7 +69,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         return intent;
     }
 
-    private File getScreenshotFile(File imageFile, View view) throws IOException {
+    private File getImageFile(File imageFile, View view) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(imageFile);
         getScreenshotBitmap(view).compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
         fileOutputStream.flush();
