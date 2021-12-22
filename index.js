@@ -1,6 +1,8 @@
 import {NativeModules} from 'react-native';
+import CONSTANTS from './utils/constants'
+const {DEFAULT_MESSAGE} = CONSTANTS;
 
-const DEFAULT_MESSAGE = "I'd like to share this screenshot with you";
+// const DEFAULT_MESSAGE = "I'd like to share this screenshot with you";
 
 // Show warning if native module isn't detected
 if (!NativeModules.RNShareImage) {
