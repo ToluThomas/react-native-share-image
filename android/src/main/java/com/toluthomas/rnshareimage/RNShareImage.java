@@ -84,10 +84,14 @@ public class RNShareImage extends ReactContextBaseJavaModule {
     }
 
     private Bitmap getScreenshotBitmap(View view) {
-        view.setDrawingCacheEnabled(true);
+        // If a partial view is available, use that. Otherwise, use the root view
+        View screenView = view != null ? view : this.getRootView();
+
         // Create bitmap from the screenshot and return it
-        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getWidth(), screenView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        screenView.layout(screenView.getLeft(), screenView.getTop(), screenView.getRight(), screenView.getBottom());
+        screenView.draw(canvas);
         return bitmap;
     }
 
