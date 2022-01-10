@@ -47,21 +47,6 @@
 #### If package is not auto-linked
 `$ react-native link react-native-share-image`
 
-#### If linking does not work still
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-2. Add `import com.toluthomas.RNShareImagePackage;` to the imports at the top of the file
-3. Add `new RNShareImagePackage()` to the list returned by the `getPackages()` method
-4. Append the following lines to `android/settings.gradle`:
-  	```groovy
-  	include ':react-native-share-image'
-  	project(':react-native-share-image').projectDir = new File(rootProject.projectDir,
-	  '../node_modules/react-native-share-image/android')
-  	```
-5. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```groovy
-      implementation project(':react-native-share-image')
-  	```
-
 ### iOS
 Will be updated when iOS is supported ...
 
