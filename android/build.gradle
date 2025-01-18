@@ -1,21 +1,19 @@
 
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        google()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath "com.android.tools.build:gradle:8.0.0"
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
+    namespace "com.toluthomas.rnshareimage"
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -31,12 +29,8 @@ android {
 }
 
 repositories {
-   // mavenCentral()
-    jcenter()
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
+   mavenCentral()
+   google()
 }
 
 dependencies {
