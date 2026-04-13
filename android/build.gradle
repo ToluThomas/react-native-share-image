@@ -1,16 +1,6 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
-    }
-}
-
 plugins {
     id 'com.android.library'
+    id 'com.facebook.react'
 }
 
 def isNewArchitectureEnabled() {
@@ -19,11 +9,11 @@ def isNewArchitectureEnabled() {
 
 android {
     namespace "com.toluthomas.rnshareimage"
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         minSdk 24
-        targetSdk 34
+        targetSdk 36
 
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     }

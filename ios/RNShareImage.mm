@@ -1,10 +1,11 @@
 #import "RNShareImage.h"
 #import <React/RCTUtils.h>
 #import <React/RCTBridge.h>
+#import <React/UIView+React.h>
 #import <UIKit/UIKit.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <React/RCTFindNodeHandle.h>
+#import <RNShareImageSpec/RNShareImageSpec.h>
 #endif
 
 @implementation RNShareImage
