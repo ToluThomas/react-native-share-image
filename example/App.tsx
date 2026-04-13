@@ -4,27 +4,28 @@ import { shareScreenshot, shareImageFromUri } from 'react-native-share-image';
 
 function App(): React.JSX.Element {
   const handleShareScreenshot = () => {
-    shareScreenshot(
-      null,
-      'Check out this screenshot!',
-      'screenshot',
-      'Share Screenshot',
-    );
+    shareScreenshot({
+      message: 'Check out this screenshot!',
+      filename: 'screenshot',
+      shareTitle: 'Share Screenshot',
+    });
   };
 
   const handleSharePartialScreenshot = () => {
-    shareScreenshot(
-      'captureArea',
-      'Check out this view!',
-      'partial',
-      'Share View',
-    );
+    shareScreenshot({
+      id: 'captureArea',
+      message: 'Check out this view!',
+      filename: 'partialScreen',
+      shareTitle: 'Share View',
+    });
   };
 
   const handleShareImage = () => {
-    // Example with a sample image URI
-    const sampleImageUri = 'https://reactnative.dev/img/tiny_logo.png';
-    shareImageFromUri(sampleImageUri, 'Check out this image!', 'Share Image');
+    shareImageFromUri({
+      imageUri: 'https://reactnative.dev/img/tiny_logo.png',
+      message: 'Check out this image!',
+      shareTitle: 'Share Image',
+    });
   };
 
   return (
