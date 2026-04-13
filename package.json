@@ -4,12 +4,17 @@
     "email": "tolu.thomas@protonmail.com",
     "url": "https://github.com/ToluThomas"
   },
-  "bundleDependencies": false,
+  "bundleDependencies": [],
   "deprecated": false,
   "description": "Grab and share screenshots, as well as share images using their content uri",
   "homepage": "https://github.com/ToluThomas/react-native-share-image#readme",
   "keywords": [
-    "react-native", "share", "screenshot", "share screenshot", "image", "share image"
+    "react-native",
+    "share",
+    "screenshot",
+    "share screenshot",
+    "image",
+    "share image"
   ],
   "license": "MIT",
   "main": "src/index",
@@ -34,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ToluThomas/react-native-share-image.git"
+    "url": "git+https://github.com/ToluThomas/react-native-share-image.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
