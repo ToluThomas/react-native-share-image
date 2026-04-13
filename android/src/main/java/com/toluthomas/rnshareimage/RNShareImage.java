@@ -57,7 +57,6 @@ public class RNShareImage extends NativeRNShareImageSpec {
     }
 
     @Override
-    @ReactMethod
     public void shareScreenshot(@Nullable String id, String message, String filename, String title, Promise promise) {
         Activity activity = getCurrentActivity();
         if (activity == null) {
@@ -101,7 +100,6 @@ public class RNShareImage extends NativeRNShareImageSpec {
     }
 
     @Override
-    @ReactMethod
     public void shareImageFromUri(String imageUri, String message, String title, Promise promise) {
         Activity activity = getCurrentActivity();
         if (activity == null) {

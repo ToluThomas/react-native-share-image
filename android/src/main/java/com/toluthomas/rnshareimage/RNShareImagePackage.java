@@ -27,17 +27,16 @@ public class RNShareImagePackage extends TurboReactPackage {
     public ReactModuleInfoProvider getReactModuleInfoProvider() {
         return () -> {
             Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
-            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
             moduleInfos.put(
                     RNShareImage.NAME,
                     new ReactModuleInfo(
                             RNShareImage.NAME,
-                            RNShareImage.NAME,
+                            RNShareImage.class.getName(),
                             false, // canOverrideExistingModule
                             false, // needsEagerInit
                             true,  // hasConstants
                             false, // isCxxModule
-                            isTurboModule // isTurboModule
+                            true   // isTurboModule
                     )
             );
             return moduleInfos;

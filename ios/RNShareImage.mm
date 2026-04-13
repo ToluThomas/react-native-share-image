@@ -4,10 +4,8 @@
 #import <React/UIView+React.h>
 #import <UIKit/UIKit.h>
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <RNShareImageSpec/RNShareImageSpec.h>
 #import <React/RCTViewComponentView.h>
-#endif
 
 static NSString *const kErrorNoWindow = @"E_NO_WINDOW";
 static NSString *const kErrorNoViewController = @"E_NO_VIEW_CONTROLLER";
@@ -56,7 +54,6 @@ RCT_EXPORT_MODULE()
 
 - (UIView *)findViewWithNativeID:(NSString *)nativeID inView:(UIView *)view
 {
-#ifdef RCT_NEW_ARCH_ENABLED
     // New Architecture (Fabric): Check nativeId property on RCTViewComponentView
     if ([view isKindOfClass:[RCTViewComponentView class]]) {
         RCTViewComponentView *componentView = (RCTViewComponentView *)view;
@@ -64,19 +61,10 @@ RCT_EXPORT_MODULE()
             return view;
         }
     }
-#endif
 
     // Check accessibilityIdentifier
     if (view.accessibilityIdentifier != nil && [view.accessibilityIdentifier isEqualToString:nativeID]) {
         return view;
-    }
-
-    // Old Architecture: Check nativeID property from UIView+React category
-    if ([view respondsToSelector:@selector(nativeID)]) {
-        NSString *viewNativeID = view.nativeID;
-        if (viewNativeID != nil && [viewNativeID isEqualToString:nativeID]) {
-            return view;
-        }
     }
 
     // Recursively search subviews
@@ -202,12 +190,12 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Exported Methods
 
-RCT_EXPORT_METHOD(shareScreenshot:(NSString *)viewId
-                  message:(NSString *)message
-                  filename:(NSString *)filename
-                  shareTitle:(NSString *)shareTitle
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
+- (void)shareScreenshot:(NSString *)viewId
+                message:(NSString *)message
+               filename:(NSString *)filename
+             shareTitle:(NSString *)shareTitle
+                resolve:(RCTPromiseResolveBlock)resolve
+                 reject:(RCTPromiseRejectBlock)reject
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIViewController *rootViewController = [self getRootViewController];
@@ -249,11 +237,11 @@ RCT_EXPORT_METHOD(shareScreenshot:(NSString *)viewId
     });
 }
 
-RCT_EXPORT_METHOD(shareImageFromUri:(NSString *)imageUri
+- (void)shareImageFromUri:(NSString *)imageUri
                   message:(NSString *)message
-                  shareTitle:(NSString *)shareTitle
+               shareTitle:(NSString *)shareTitle
                   resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
+                   reject:(RCTPromiseRejectBlock)reject
 {
     NSURL *url = [NSURL URLWithString:imageUri];
     if (!url) {
@@ -308,11 +296,9 @@ RCT_EXPORT_METHOD(shareImageFromUri:(NSString *)imageUri
     }
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
 {
     return std::make_shared<facebook::react::NativeRNShareImageSpecJSI>(params);
 }
-#endif
 
 @end

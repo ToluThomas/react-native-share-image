@@ -21,8 +21,6 @@ DerivedData
 *.ipa
 *.xcuserstate
 contents.xcworkspacedata
-*.h
-*.m
 Pods/
 
 # Android/IJ
