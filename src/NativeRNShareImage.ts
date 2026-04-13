@@ -7,13 +7,13 @@ export interface Spec extends TurboModule {
     message: string,
     filename: string,
     shareTitle: string
-  ): void;
+  ): Promise<void>;
 
   shareImageFromUri(
     imageUri: string,
     message: string,
     shareTitle: string
-  ): void;
+  ): Promise<void>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RNShareImage');

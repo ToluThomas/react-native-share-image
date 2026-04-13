@@ -5,25 +5,27 @@
  * @param message - Message to be shown during share
  * @param filename - name of temporary screenshot file
  * @param shareTitle - title of share modal
+ * @returns Promise that resolves when share sheet is opened, rejects on error
  */
 export declare function shareScreenshot(
   id?: string | null,
   message?: string,
   filename?: string,
   shareTitle?: string
-): void;
+): Promise<void>;
 
 /**
- * Share image using uri of an image
- * @param imageUri - Specify a content uri for image to be shared
+ * Share image using uri of an image (supports both local and remote URLs)
+ * @param imageUri - Local content:// URI or remote http(s):// URL
  * @param message - Message to be shown during share
  * @param shareTitle - title of share modal
+ * @returns Promise that resolves when share sheet is opened, rejects on error
  */
 export declare function shareImageFromUri(
   imageUri: string,
   message?: string,
   shareTitle?: string
-): void;
+): Promise<void>;
 
 declare const _default: {
   shareScreenshot: typeof shareScreenshot;
