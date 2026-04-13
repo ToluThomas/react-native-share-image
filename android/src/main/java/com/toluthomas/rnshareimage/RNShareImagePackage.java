@@ -1,31 +1,46 @@
-
 package com.toluthomas.rnshareimage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.facebook.react.ReactPackage;
+import com.facebook.react.TurboReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
-public class RNShareImagePackage implements ReactPackage {
-    @Nonnull
+public class RNShareImagePackage extends TurboReactPackage {
+
+    @Nullable
     @Override
-    public List<NativeModule> createNativeModules(@Nonnull ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
-
-        modules.add(new RNShareImage(reactContext));
-
-        return modules;
+    public NativeModule getModule(@NonNull String name, @NonNull ReactApplicationContext reactContext) {
+        if (name.equals(RNShareImage.NAME)) {
+            return new RNShareImage(reactContext);
+        }
+        return null;
     }
 
-    @Nonnull
     @Override
-    public List<ViewManager> createViewManagers(@Nonnull ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        return () -> {
+            Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+            boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+            moduleInfos.put(
+                    RNShareImage.NAME,
+                    new ReactModuleInfo(
+                            RNShareImage.NAME,
+                            RNShareImage.NAME,
+                            false, // canOverrideExistingModule
+                            false, // needsEagerInit
+                            true,  // hasConstants
+                            false, // isCxxModule
+                            isTurboModule // isTurboModule
+                    )
+            );
+            return moduleInfos;
+        };
     }
 }

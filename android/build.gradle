@@ -1,45 +1,63 @@
-
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        google()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:8.2.0'
     }
 }
 
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
+
+def isNewArchitectureEnabled() {
+    return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    namespace "com.toluthomas.rnshareimage"
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1"
+        minSdk 24
+        targetSdk 34
+
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     lintOptions {
         abortOnError false
+    }
+
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs += ['src/newarch']
+            } else {
+                java.srcDirs += ['src/oldarch']
+            }
+        }
     }
 }
 
 repositories {
-   // mavenCentral()
-    jcenter()
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
+    google()
+    mavenCentral()
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.facebook.react:react-android'
+    implementation 'androidx.core:core:1.12.0'
 }
-  

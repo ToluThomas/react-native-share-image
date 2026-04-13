@@ -7,10 +7,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.uimanager.util.ReactFindViewUtil;
 
@@ -19,10 +20,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
+public class RNShareImage extends NativeRNShareImageSpec {
 
-public class RNShareImage extends ReactContextBaseJavaModule {
-
+    public static final String NAME = "RNShareImage";
     private final ReactApplicationContext reactContext;
 
     RNShareImage(ReactApplicationContext reactContext) {
@@ -30,14 +30,15 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         this.reactContext = reactContext;
     }
 
-    @Nonnull
     @Override
+    @NonNull
     public String getName() {
-        return "RNShareImage";
+        return NAME;
     }
 
+    @Override
     @ReactMethod
-    public void shareScreenshot(String id, String subject, String filename, String title) {
+    public void shareScreenshot(@Nullable String id, String subject, String filename, String title) {
         try {
             Intent intent = getIntent(subject);
             View view = id != null ? getPartialView(id) : this.getRootView();
@@ -51,6 +52,7 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         }
     }
 
+    @Override
     @ReactMethod
     public void shareImageFromUri(String imageUri, String subject, String title) {
         try {
@@ -60,7 +62,6 @@ public class RNShareImage extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private Intent getIntent(String subject) {

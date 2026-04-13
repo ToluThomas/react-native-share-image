@@ -10,11 +10,10 @@ Pod::Spec.new do |s|
   s.authors        = package['author']
   s.license        = package['license']
   s.homepage       = package['homepage']
-  s.platform       = :ios, "10.0"
+  s.platforms      = { :ios => "15.1" }
   s.source         = { :git => package['repository']['url'], :tag => "#{s.version}" }
-  s.source_files   = "ios/**/*.{h,m}"
+  s.source_files   = "*.{h,m,mm}"
   s.requires_arc   = true
-  s.dependency     "React-Core"
-end
 
-  
+  install_modules_dependencies(s)
+end
