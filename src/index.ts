@@ -18,12 +18,16 @@ const RNShareImageModule = isTurboModuleEnabled
   ? require("./NativeRNShareImage").default
   : NativeModules.RNShareImage;
 
-if (!RNShareImageModule) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "RNShareImage could not find native module. Please make sure native module is properly linked.",
-  );
-}
+const MODULE_NOT_FOUND_ERROR = new Error(
+  "RNShareImage native module not found. Please make sure native module is properly linked.",
+);
+
+const getModule = (): typeof RNShareImageModule => {
+  if (!RNShareImageModule) {
+    throw MODULE_NOT_FOUND_ERROR;
+  }
+  return RNShareImageModule;
+};
 
 /**
  * Share screenshot of current app screen or specify a view to get screenshot of
@@ -32,28 +36,38 @@ if (!RNShareImageModule) {
  * @param message - Message to be shown during share
  * @param filename - name of temporary screenshot file
  * @param shareTitle - title of share modal
+ * @returns Promise that resolves when share sheet is opened, rejects on error
  */
 export const shareScreenshot = (
   id: string | null = null,
   message: string = CONSTANTS.DEFAULT_MESSAGE,
   filename: string = Date.now().toString(),
   shareTitle: string = CONSTANTS.DEFAULT_SCREENSHOT_SHARE_TITLE,
-): void => {
-  RNShareImageModule?.shareScreenshot(id, message, filename, shareTitle);
+): Promise<void> => {
+  try {
+    return getModule().shareScreenshot(id, message, filename, shareTitle);
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
 
 /**
- * Share image using uri of an image
- * @param imageUri - Specify a content uri for image to be shared
+ * Share image using uri of an image (supports both local and remote URLs)
+ * @param imageUri - Local content:// URI or remote http(s):// URL
  * @param message - Message to be shown during share
  * @param shareTitle - title of share modal
+ * @returns Promise that resolves when share sheet is opened, rejects on error
  */
 export const shareImageFromUri = (
   imageUri: string,
   message: string = CONSTANTS.DEFAULT_MESSAGE,
   shareTitle: string = CONSTANTS.DEFAULT_IMAGE_SHARE_TITLE,
-): void => {
-  RNShareImageModule?.shareImageFromUri(imageUri, message, shareTitle);
+): Promise<void> => {
+  try {
+    return getModule().shareImageFromUri(imageUri, message, shareTitle);
+  } catch (e) {
+    return Promise.reject(e);
+  }
 };
 
 export default {
