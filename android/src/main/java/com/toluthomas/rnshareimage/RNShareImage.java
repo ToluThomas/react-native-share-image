@@ -18,6 +18,9 @@ import com.facebook.react.uimanager.util.ReactFindViewUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
 
 public class RNShareImage extends NativeRNShareImageSpec {
@@ -54,19 +57,70 @@ public class RNShareImage extends NativeRNShareImageSpec {
 
     @Override
     @ReactMethod
-    public void shareImageFromUri(String imageUri, String subject, String title) {
-        try {
-            Intent intent = getIntent(subject);
-            intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-            Objects.requireNonNull(getCurrentActivity()).startActivity(Intent.createChooser(intent, title));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void shareImageFromUri(String imageUri, String message, String title) {
+        new Thread(() -> {
+            try {
+                Uri uri;
+                if (isRemoteUrl(imageUri)) {
+                    File localFile = downloadImage(imageUri);
+                    uri = getImageUri(localFile);
+                } else {
+                    uri = Uri.parse(imageUri);
+                }
+
+                Intent intent = getIntent(message);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+
+                Objects.requireNonNull(getCurrentActivity()).runOnUiThread(() -> {
+                    getCurrentActivity().startActivity(Intent.createChooser(intent, title));
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
-    private Intent getIntent(String subject) {
+    private boolean isRemoteUrl(String uri) {
+        return uri != null && (uri.startsWith("http://") || uri.startsWith("https://"));
+    }
+
+    private File downloadImage(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.connect();
+
+        String filename = getFilenameFromUrl(imageUrl);
+        File outputFile = new File(getStorageDirectory(), filename);
+
+        try (InputStream input = connection.getInputStream();
+             FileOutputStream output = new FileOutputStream(outputFile)) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = input.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+            output.flush();
+        }
+
+        return outputFile;
+    }
+
+    private String getFilenameFromUrl(String url) {
+        String filename = url.substring(url.lastIndexOf('/') + 1);
+        if (!filename.contains(".")) {
+            filename = filename + ".png";
+        }
+        // Remove query parameters if present
+        if (filename.contains("?")) {
+            filename = filename.substring(0, filename.indexOf("?"));
+        }
+        return filename;
+    }
+
+    private Intent getIntent(String message) {
         Intent intent = new Intent();
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
         intent.setAction(Intent.ACTION_SEND);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
