@@ -23,8 +23,6 @@ DerivedData
 *.ipa
 *.xcuserstate
 contents.xcworkspacedata
-*.h
-*.m
 Pods/
 
 # Android/IJ
@@ -55,3 +53,6 @@ bundles/
 
 # VS Code
 .vscode/*
+
+# Example app
+example/
