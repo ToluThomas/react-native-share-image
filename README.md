@@ -1,6 +1,9 @@
 # react-native-share-image
 
 [![npm](https://img.shields.io/npm/v/react-native-share-image)](https://www.npmjs.com/package/react-native-share-image)
+[![license](https://img.shields.io/npm/l/react-native-share-image)](https://github.com/ToluThomas/react-native-share-image/blob/main/LICENSE)
+[![downloads](https://img.shields.io/npm/dm/react-native-share-image)](https://www.npmjs.com/package/react-native-share-image)
+![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey)
 
 React Native library to capture and share screenshots, as well as share images from URIs (local or remote).
 
@@ -73,34 +76,34 @@ cd ios && pod install
 Capture and share a screenshot of the entire screen or a specific view.
 
 ```typescript
-import { shareScreenshot } from 'react-native-share-image';
+import { shareScreenshot } from "react-native-share-image";
 
 // Share entire screen with defaults
 await shareScreenshot();
 
 // Share a specific view (requires nativeID prop on the View)
-await shareScreenshot({ id: 'myViewId' });
+await shareScreenshot({ id: "myViewId" });
 
 // With custom message
-await shareScreenshot({ message: 'Check this out!' });
+await shareScreenshot({ message: "Check this out!" });
 
 // With multiple options
 await shareScreenshot({
-  id: 'captureArea',
-  message: 'Check this out!',
-  filename: 'my-screenshot',
-  shareTitle: 'Share via',
+  id: "captureArea",
+  message: "Check this out!",
+  filename: "my-screenshot",
+  shareTitle: "Share via",
 });
 ```
 
 #### Options
 
-| Property     | Type             | Default          | Description                                                                                                    |
-| ------------ | ---------------- | ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| `id`         | `string \| null` | `null`           | The `nativeID` of the View to capture. Omit for full screen. See [nativeID docs](https://reactnative.dev/docs/view#nativeid) |
-| `message`    | `string`         | `"Screenshot"`   | Message shown during share                                                                                     |
-| `filename`   | `string`         | Current timestamp| Name of the temporary screenshot file                                                                          |
-| `shareTitle` | `string`         | `"Screenshot"`   | Title of the share modal                                                                                       |
+| Property     | Type             | Default           | Description                                                                                                                  |
+| ------------ | ---------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `id`         | `string \| null` | `null`            | The `nativeID` of the View to capture. Omit for full screen. See [nativeID docs](https://reactnative.dev/docs/view#nativeid) |
+| `message`    | `string`         | `"Screenshot"`    | Message shown during share                                                                                                   |
+| `filename`   | `string`         | Current timestamp | Name of the temporary screenshot file                                                                                        |
+| `shareTitle` | `string`         | `"Screenshot"`    | Title of the share modal                                                                                                     |
 
 ---
 
@@ -109,25 +112,25 @@ await shareScreenshot({
 Share an image from a local file path or remote URL.
 
 ```typescript
-import { shareImageFromUri } from 'react-native-share-image';
+import { shareImageFromUri } from "react-native-share-image";
 
 // Share from local URI
-await shareImageFromUri({ imageUri: 'file:///path/to/image.png' });
+await shareImageFromUri({ imageUri: "file:///path/to/image.png" });
 
 // Share from remote URL (image will be downloaded first)
-await shareImageFromUri({ imageUri: 'https://example.com/image.png' });
+await shareImageFromUri({ imageUri: "https://example.com/image.png" });
 
 // With custom message
 await shareImageFromUri({
-  imageUri: 'https://example.com/image.png',
-  message: 'Check this out!',
+  imageUri: "https://example.com/image.png",
+  message: "Check this out!",
 });
 
 // With all options
 await shareImageFromUri({
-  imageUri: 'https://example.com/image.png',
-  message: 'Check this out!',
-  shareTitle: 'Share via',
+  imageUri: "https://example.com/image.png",
+  message: "Check this out!",
+  shareTitle: "Share via",
 });
 ```
 
@@ -151,12 +154,21 @@ Version 2.0 introduces several breaking changes:
 
    ```typescript
    // v1.x (positional arguments)
-   shareScreenshot('viewId', 'message', 'filename', 'title');
-   shareImageFromUri('uri', 'message', 'title');
+   shareScreenshot("viewId", "message", "filename", "title");
+   shareImageFromUri("uri", "message", "title");
 
    // v2.x (options object)
-   await shareScreenshot({ id: 'viewId', message: 'message', filename: 'filename', shareTitle: 'title' });
-   await shareImageFromUri({ imageUri: 'uri', message: 'message', shareTitle: 'title' });
+   await shareScreenshot({
+     id: "viewId",
+     message: "message",
+     filename: "filename",
+     shareTitle: "title",
+   });
+   await shareImageFromUri({
+     imageUri: "uri",
+     message: "message",
+     shareTitle: "title",
+   });
    ```
 
 3. **Promise-based API**: All methods now return Promises.
@@ -164,7 +176,9 @@ Version 2.0 introduces several breaking changes:
    ```typescript
    await shareScreenshot();
    // or
-   shareScreenshot().then(() => console.log('Shared!')).catch(console.error);
+   shareScreenshot()
+     .then(() => console.log("Shared!"))
+     .catch(console.error);
    ```
 
 4. **iOS Support**: Full iOS support has been added in v2.x.
