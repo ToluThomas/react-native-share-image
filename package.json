@@ -6,7 +6,7 @@
   },
   "bundleDependencies": [],
   "deprecated": false,
-  "description": "Grab and share screenshots, as well as share images using their content uri",
+  "description": "React Native library to capture and share screenshots, as well as share images from URIs (local or remote)",
   "homepage": "https://github.com/ToluThomas/react-native-share-image#readme",
   "keywords": [
     "react-native",
@@ -14,7 +14,15 @@
     "screenshot",
     "share screenshot",
     "image",
-    "share image"
+    "share image",
+    "capture",
+    "screen capture",
+    "share sheet",
+    "expo",
+    "turbomodule",
+    "fabric",
+    "ios",
+    "android"
   ],
   "license": "MIT",
   "main": "src/index",
