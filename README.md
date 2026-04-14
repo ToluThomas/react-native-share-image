@@ -1,5 +1,7 @@
 # react-native-share-image
 
+[![npm](https://img.shields.io/npm/v/react-native-share-image)](https://www.npmjs.com/package/react-native-share-image)
+
 React Native library to capture and share screenshots, as well as share images from URIs (local or remote).
 
 ## Table of Contents
