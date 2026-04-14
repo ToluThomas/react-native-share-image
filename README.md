@@ -7,6 +7,10 @@
 
 React Native library to capture and share screenshots, as well as share images from URIs (local or remote).
 
+## Demo
+
+![Demo](./demo.gif)
+
 ## Table of Contents
 
 - [Requirements](#requirements)
