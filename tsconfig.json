@@ -14,8 +14,8 @@
     "declaration": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "types": ["react-native"]
+    "types": ["react-native", "jest"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "__tests__/**/*", "__mocks__/**/*"],
   "exclude": ["node_modules"]
 }
