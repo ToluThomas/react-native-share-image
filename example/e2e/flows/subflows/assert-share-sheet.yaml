@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+---
+# The system share sheet runs outside the app, so it's checked by what it displays.
+# SHARED_NAME: the shared file's name without extension. SHARED_TYPE: e.g. "PNG Image".
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible: Sharing image
+          timeout: 20000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # iOS shows the file name and its type in the share sheet's header.
+      - extendedWaitUntil:
+          visible:
+            id: LP.CaptionBar.TopCaption
+            text: ${SHARED_NAME}
+          timeout: 20000
+      - assertVisible:
+          id: LP.CaptionBar.BottomCaption
+          text: "${SHARED_TYPE}.*"

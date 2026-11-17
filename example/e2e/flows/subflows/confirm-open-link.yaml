@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+---
+# iOS asks for confirmation before opening an app from a custom URL scheme.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: Open
+          optional: true
