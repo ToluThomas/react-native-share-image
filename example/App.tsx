@@ -30,7 +30,7 @@ function App(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
+      <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
         <Text style={styles.title}>Share Image Example</Text>
         <Text style={styles.subtitle}>React Native Share Image Library</Text>
