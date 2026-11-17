@@ -3,7 +3,7 @@ package com.toluthomas.rnshareimage;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.facebook.react.TurboReactPackage;
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
@@ -12,7 +12,7 @@ import com.facebook.react.module.model.ReactModuleInfoProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RNShareImagePackage extends TurboReactPackage {
+public class RNShareImagePackage extends BaseReactPackage {
 
     @Nullable
     @Override
@@ -34,7 +34,6 @@ public class RNShareImagePackage extends TurboReactPackage {
                             RNShareImage.class.getName(),
                             false, // canOverrideExistingModule
                             false, // needsEagerInit
-                            true,  // hasConstants
                             false, // isCxxModule
                             true   // isTurboModule
                     )

@@ -56,3 +56,7 @@ bundles/
 
 # Example app
 example/
+
+# Release tooling
+scripts/
+RELEASING.md

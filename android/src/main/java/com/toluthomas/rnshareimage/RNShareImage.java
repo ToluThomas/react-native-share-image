@@ -58,7 +58,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
 
     @Override
     public void shareScreenshot(@Nullable String id, String message, String filename, String title, Promise promise) {
-        Activity activity = getCurrentActivity();
+        Activity activity = reactContext.getCurrentActivity();
         if (activity == null) {
             promise.reject(ERROR_NO_ACTIVITY, "No activity available");
             return;
@@ -101,7 +101,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
 
     @Override
     public void shareImageFromUri(String imageUri, String message, String title, Promise promise) {
-        Activity activity = getCurrentActivity();
+        Activity activity = reactContext.getCurrentActivity();
         if (activity == null) {
             promise.reject(ERROR_NO_ACTIVITY, "No activity available");
             return;
@@ -281,7 +281,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
 
     @Nullable
     private View getRootView() {
-        Activity activity = getCurrentActivity();
+        Activity activity = reactContext.getCurrentActivity();
         if (activity == null) return null;
         return activity.getWindow().getDecorView().findViewById(android.R.id.content);
     }
