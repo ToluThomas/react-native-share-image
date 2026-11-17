@@ -43,29 +43,9 @@ cd ios && pod install
 
 ### Android
 
-1. Create `file_paths.xml` at `android/app/src/main/res/xml/file_paths.xml`:
+No setup needed. The library declares its own `FileProvider` (authority `<applicationId>.rnshareimage.fileprovider`), so it doesn't conflict with any provider your app or other libraries use.
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <external-files-path name="images" path="Pictures/" />
-    <cache-path name="cache" path="/" />
-</paths>
-```
-
-2. Add a `<provider>` to your `AndroidManifest.xml` inside the `<application>` tag:
-
-```xml
-<provider
-    android:name="androidx.core.content.FileProvider"
-    android:authorities="${applicationId}.provider"
-    android:exported="false"
-    android:grantUriPermissions="true">
-    <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths" />
-</provider>
-```
+> **Upgrading from 2.0.2 or earlier:** older versions asked you to add a `FileProvider` with the authority `${applicationId}.provider` and a `file_paths.xml`. If nothing else in your app uses them, you can remove both.
 
 ## API
 
