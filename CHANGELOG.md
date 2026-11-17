@@ -12,11 +12,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Android: replaced deprecated React Native APIs. `TurboReactPackage` is now `BaseReactPackage`, `getCurrentActivity()` is now `getReactApplicationContext().getCurrentActivity()`, and the `ReactModuleInfo` constructor no longer takes the `hasConstants` argument. React Native >= 0.74 is still supported.
 
 ### 📦 Other
+- Tested with React Native 0.88.1.
 - Android: `compileSdk` raised from 36 to 37.
-- Development now runs against React Native 0.88.1.
-- Example app upgraded from React Native 0.85.0 to 0.88.1.
-- CI now tests on Node 22 and 24, and publishing runs on Node 24.
-- Added this changelog, a release script (`npm run release`) and a release guide (`RELEASING.md`).
 
 ## [2.0.0] - 2026-04-13
 
