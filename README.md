@@ -17,6 +17,7 @@ React Native library to capture and share screenshots, as well as share images f
 - [Installation](#installation)
 - [API](#api)
 - [Migration from v1.x](#migration-from-v1x)
+- [Releasing](#releasing)
 
 ## Requirements
 
@@ -193,6 +194,10 @@ Version 2.0 introduces several breaking changes:
    - React Native >= 0.74.0
    - iOS 15.1+
    - Android SDK 24+
+
+## Releasing
+
+Maintainers: see [RELEASING.md](RELEASING.md) for how to publish a new version. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
