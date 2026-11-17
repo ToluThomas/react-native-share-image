@@ -6,6 +6,12 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-11-17
+
+### 📦 Other
+- The npm package now contains only the library files, shrinking it from 143 kB to 12 kB.
+- Added the MIT `LICENSE` file to the package.
+
 ## [2.0.1] - 2026-11-17
 
 ### 🐛 Fixes
@@ -41,6 +47,7 @@ and this project follows [Semantic Versioning](https://semver.org/).
 ### 📦 Other
 - Added example project demonstrating all features
 
-[Unreleased]: https://github.com/ToluThomas/react-native-share-image/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/ToluThomas/react-native-share-image/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/ToluThomas/react-native-share-image/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/ToluThomas/react-native-share-image/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/ToluThomas/react-native-share-image/releases/tag/v2.0.0
