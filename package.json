@@ -57,5 +57,16 @@
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
-  "version": "2.0.1"
+  "version": "2.0.2",
+  "files": [
+    "src",
+    "android/build.gradle",
+    "android/gradle.properties",
+    "android/src",
+    "ios/*.h",
+    "ios/*.mm",
+    "react-native-share-image.podspec",
+    "react-native.config.js",
+    "CHANGELOG.md"
+  ]
 }
