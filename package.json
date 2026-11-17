@@ -53,6 +53,7 @@
     "url": "git+https://github.com/ToluThomas/react-native-share-image.git"
   },
   "scripts": {
+    "release": "sh scripts/release.sh",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
