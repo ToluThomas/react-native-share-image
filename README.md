@@ -9,7 +9,7 @@ React Native library to capture and share screenshots, as well as share images f
 
 ## Demo
 
-![Demo](./demo.gif)
+![Demo](https://raw.githubusercontent.com/ToluThomas/react-native-share-image/main/demo.gif)
 
 ## Table of Contents
 
