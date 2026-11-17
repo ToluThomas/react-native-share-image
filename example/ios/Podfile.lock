@@ -1421,7 +1421,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-share-image (2.0.0):
+  - react-native-share-image (2.0.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2160,7 +2160,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 0207d6133274a7cbfc3d0dae326e3055c8cfcf9e
   React-mutationobservernativemodule: b97a67c29f724d18a92379e7390f24350acb433a
   react-native-safe-area-context: 56700b839169ce88ffcec68c40447916fe512462
-  react-native-share-image: 3f6c4ce3440e418ea9effd81fb17a5e14d1c47f9
+  react-native-share-image: c482bfc090b64d77ce06c822ee769c45ca0e06f7
   React-NativeModulesApple: 8cfb2f308f48c48068c96b932e7f0e4297c23342
   React-networking: 3325cf73ecbdaacab0da91260b094baf36061a56
   React-oscompat: a776760fdfa152e12114f8c30d833963daac27e1
