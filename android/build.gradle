@@ -3,10 +3,6 @@ plugins {
     id 'com.facebook.react'
 }
 
-def isNewArchitectureEnabled() {
-    return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
-}
-
 android {
     namespace "com.toluthomas.rnshareimage"
     compileSdk 37
@@ -14,12 +10,6 @@ android {
     defaultConfig {
         minSdk 24
         targetSdk 36
-
-        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-    }
-
-    buildFeatures {
-        buildConfig true
     }
 
     compileOptions {
@@ -27,18 +17,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    lintOptions {
+    lint {
         abortOnError false
-    }
-
-    sourceSets {
-        main {
-            if (isNewArchitectureEnabled()) {
-                java.srcDirs += ['src/newarch']
-            } else {
-                java.srcDirs += ['src/oldarch']
-            }
-        }
     }
 }
 

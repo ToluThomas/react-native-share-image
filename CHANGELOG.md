@@ -6,6 +6,15 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### 🐛 Fixes
+- Android: `shareImageFromUri()` now works with local `file://` URIs. Previously Android 7+ refused them and the promise rejected with `E_SHARE_FAILED`.
+- Android: shared images now carry their real type (JPEG, WebP, …) instead of always `image/png`.
+- Android: the `filename` option is now used exactly as given (unsafe characters are replaced).
+- Android: screenshots and downloaded images are stored in the app's cache and old ones are removed, instead of piling up in app storage.
+
+### 📦 Other
+- Android: no setup is needed any more. The library now declares its own `FileProvider` with a unique authority, so it can't conflict with other providers. If you added the `FileProvider` and `file_paths.xml` from earlier versions only for this library, you can remove them.
+
 ## [2.0.2] - 2026-11-17
 
 ### 📦 Other

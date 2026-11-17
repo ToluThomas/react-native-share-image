@@ -1,34 +1,38 @@
 package com.toluthomas.rnshareimage;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.PixelCopy;
 import android.view.View;
 import android.view.Window;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.uimanager.util.ReactFindViewUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,6 +44,12 @@ public class RNShareImage extends NativeRNShareImageSpec {
     private static final String ERROR_SCREENSHOT_FAILED = "E_SCREENSHOT_FAILED";
     private static final String ERROR_DOWNLOAD_FAILED = "E_DOWNLOAD_FAILED";
     private static final String ERROR_SHARE_FAILED = "E_SHARE_FAILED";
+
+    /** Folder inside the app cache that the library's FileProvider serves. */
+    private static final String SHARE_DIR = "rnshareimage";
+    /** Shared files older than this are removed before a new one is written. */
+    private static final long MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000L;
+    private static final String FALLBACK_MIME_TYPE = "image/*";
 
     private final ReactApplicationContext reactContext;
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -54,6 +64,12 @@ public class RNShareImage extends NativeRNShareImageSpec {
     @NonNull
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public void invalidate() {
+        executor.shutdownNow();
+        super.invalidate();
     }
 
     @Override
@@ -76,20 +92,12 @@ public class RNShareImage extends NativeRNShareImageSpec {
                     executor.execute(() -> {
                         try {
                             File imageFile = saveBitmap(bitmap, filename);
-                            bitmap.recycle();
-
-                            Uri imageUri = getImageUri(imageFile, activity);
-
-                            mainHandler.post(() -> {
-                                try {
-                                    shareImage(imageUri, message, title, activity);
-                                    promise.resolve(null);
-                                } catch (Exception e) {
-                                    promise.reject(ERROR_SHARE_FAILED, "Failed to share: " + e.getMessage(), e);
-                                }
-                            });
+                            Uri imageUri = getShareableUri(imageFile);
+                            mainHandler.post(() -> shareImage(imageUri, "image/png", message, title, activity, promise));
                         } catch (Exception e) {
                             promise.reject(ERROR_SCREENSHOT_FAILED, "Failed to save screenshot: " + e.getMessage(), e);
+                        } finally {
+                            bitmap.recycle();
                         }
                     });
                 }, error -> promise.reject(ERROR_SCREENSHOT_FAILED, error));
@@ -110,21 +118,23 @@ public class RNShareImage extends NativeRNShareImageSpec {
         executor.execute(() -> {
             try {
                 Uri uri;
+                String mimeType;
                 if (isRemoteUrl(imageUri)) {
                     File localFile = downloadImage(imageUri);
-                    uri = getImageUri(localFile, activity);
+                    uri = getShareableUri(localFile);
+                    mimeType = getMimeTypeFromName(localFile.getName());
+                } else if (isLocalFile(imageUri)) {
+                    // file:// URIs can't be passed to other apps (FileUriExposedException on
+                    // Android 7+), so copy the file into the shared folder and share a content:// URI.
+                    File localFile = copyToShareDir(getLocalFile(imageUri));
+                    uri = getShareableUri(localFile);
+                    mimeType = getMimeTypeFromName(localFile.getName());
                 } else {
                     uri = Uri.parse(imageUri);
+                    mimeType = getMimeType(uri);
                 }
 
-                mainHandler.post(() -> {
-                    try {
-                        shareImage(uri, message, title, activity);
-                        promise.resolve(null);
-                    } catch (Exception e) {
-                        promise.reject(ERROR_SHARE_FAILED, "Failed to share: " + e.getMessage(), e);
-                    }
-                });
+                mainHandler.post(() -> shareImage(uri, mimeType, message, title, activity, promise));
             } catch (Exception e) {
                 promise.reject(ERROR_DOWNLOAD_FAILED, "Failed to process image: " + e.getMessage(), e);
             }
@@ -213,7 +223,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
     }
 
     private File saveBitmap(Bitmap bitmap, String filename) throws IOException {
-        File imageFile = getTempImageFile(filename);
+        File imageFile = new File(getShareDir(), sanitizeFilename(filename, "screenshot") + ".png");
         try (FileOutputStream fos = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
@@ -221,17 +231,50 @@ public class RNShareImage extends NativeRNShareImageSpec {
         return imageFile;
     }
 
-    private void shareImage(Uri imageUri, String message, String title, Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image/png");
-        intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-        intent.putExtra(Intent.EXTRA_TEXT, message);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        activity.startActivity(Intent.createChooser(intent, title));
+    private void shareImage(Uri imageUri, String mimeType, String message, String title, Activity activity, Promise promise) {
+        try {
+            // ShareCompat puts the stream in ClipData too, so the read grant reaches the target app.
+            Intent chooser = new ShareCompat.IntentBuilder(activity)
+                .setType(mimeType)
+                .setStream(imageUri)
+                .setText(message)
+                .setChooserTitle(title)
+                .createChooserIntent()
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            activity.startActivity(chooser);
+            promise.resolve(null);
+        } catch (Exception e) {
+            promise.reject(ERROR_SHARE_FAILED, "Failed to share: " + e.getMessage(), e);
+        }
     }
 
     private boolean isRemoteUrl(String uri) {
         return uri != null && (uri.startsWith("http://") || uri.startsWith("https://"));
+    }
+
+    private boolean isLocalFile(String uri) {
+        return uri != null && (uri.startsWith("file://") || uri.startsWith("/"));
+    }
+
+    private File getLocalFile(String uri) throws IOException {
+        String path = uri.startsWith("file://") ? Uri.parse(uri).getPath() : uri;
+        if (path == null) {
+            throw new IOException("Invalid file URI: " + uri);
+        }
+        File file = new File(path);
+        if (!file.isFile()) {
+            throw new IOException("File not found: " + path);
+        }
+        return file;
+    }
+
+    private File copyToShareDir(File source) throws IOException {
+        File target = new File(getShareDir(), sanitizeFilename(source.getName(), "image"));
+        try (InputStream input = new FileInputStream(source);
+             OutputStream output = new FileOutputStream(target)) {
+            copy(input, output);
+        }
+        return target;
     }
 
     private File downloadImage(String imageUrl) throws IOException {
@@ -240,43 +283,82 @@ public class RNShareImage extends NativeRNShareImageSpec {
         connection.setConnectTimeout(15000);
         connection.setReadTimeout(15000);
         connection.setDoInput(true);
-        connection.connect();
 
-        int responseCode = connection.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("HTTP error code: " + responseCode);
-        }
+        try {
+            connection.connect();
 
-        String filename = getFilenameFromUrl(imageUrl);
-        File outputFile = new File(getStorageDirectory(), filename);
-
-        try (InputStream input = connection.getInputStream();
-             FileOutputStream output = new FileOutputStream(outputFile)) {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = input.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
             }
-            output.flush();
+
+            File outputFile = new File(getShareDir(), getFilenameFromUrl(imageUrl, connection.getContentType()));
+            try (InputStream input = connection.getInputStream();
+                 OutputStream output = new FileOutputStream(outputFile)) {
+                copy(input, output);
+            }
+            return outputFile;
         } finally {
             connection.disconnect();
         }
-
-        return outputFile;
     }
 
-    private String getFilenameFromUrl(String url) {
+    private static void copy(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+        output.flush();
+    }
+
+    private String getFilenameFromUrl(String url, @Nullable String contentType) {
         String filename = url.substring(url.lastIndexOf('/') + 1);
-        // Remove query parameters
         int queryIndex = filename.indexOf('?');
-        if (queryIndex > 0) {
+        if (queryIndex >= 0) {
             filename = filename.substring(0, queryIndex);
         }
-        // Ensure file has extension
+        int fragmentIndex = filename.indexOf('#');
+        if (fragmentIndex >= 0) {
+            filename = filename.substring(0, fragmentIndex);
+        }
+        filename = sanitizeFilename(filename, "image");
         if (!filename.contains(".")) {
-            filename = filename + ".png";
+            String extension = contentType != null
+                ? MimeTypeMap.getSingleton().getExtensionFromMimeType(contentType.split(";")[0].trim())
+                : null;
+            filename = filename + "." + (extension != null ? extension : "png");
         }
         return filename;
+    }
+
+    /** Keeps letters, digits, dots, dashes and underscores, so a name can't point outside the folder. */
+    private static String sanitizeFilename(@Nullable String name, String fallback) {
+        String cleaned = name == null ? "" : name.replaceAll("[^A-Za-z0-9._-]", "_").replaceAll("^\\.+", "");
+        return cleaned.isEmpty() ? fallback : cleaned;
+    }
+
+    private String getMimeType(Uri uri) {
+        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            String type = reactContext.getContentResolver().getType(uri);
+            if (type != null) {
+                return type;
+            }
+        }
+        String lastSegment = uri.getLastPathSegment();
+        return lastSegment != null ? getMimeTypeFromName(lastSegment) : FALLBACK_MIME_TYPE;
+    }
+
+    private static String getMimeTypeFromName(String name) {
+        int dot = name.lastIndexOf('.');
+        if (dot >= 0) {
+            String extension = name.substring(dot + 1).toLowerCase(Locale.ROOT);
+            String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            if (type != null) {
+                return type;
+            }
+        }
+        return FALLBACK_MIME_TYPE;
     }
 
     @Nullable
@@ -293,19 +375,30 @@ public class RNShareImage extends NativeRNShareImageSpec {
         return ReactFindViewUtil.findView(rootView, id);
     }
 
-    private File getStorageDirectory() {
-        return reactContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    /** The cache folder the library's FileProvider serves. Old files are removed on each call. */
+    private File getShareDir() throws IOException {
+        File dir = new File(reactContext.getCacheDir(), SHARE_DIR);
+        if (!dir.isDirectory() && !dir.mkdirs()) {
+            throw new IOException("Could not create " + dir);
+        }
+        File[] files = dir.listFiles();
+        if (files != null) {
+            long cutoff = System.currentTimeMillis() - MAX_FILE_AGE_MS;
+            for (File file : files) {
+                if (file.lastModified() < cutoff) {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
+                }
+            }
+        }
+        return dir;
     }
 
-    private File getTempImageFile(String filename) throws IOException {
-        return File.createTempFile(filename, ".png", getStorageDirectory());
-    }
-
-    private Uri getImageUri(File imageFile, Activity activity) {
+    private Uri getShareableUri(File file) {
         return FileProvider.getUriForFile(
             reactContext,
-            activity.getPackageName() + ".provider",
-            imageFile
+            reactContext.getPackageName() + ".rnshareimage.fileprovider",
+            file
         );
     }
 }
