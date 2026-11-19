@@ -50,6 +50,8 @@ public class RNShareImage extends NativeRNShareImageSpec {
     /** Shared files older than this are removed before a new one is written. */
     private static final long MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000L;
     private static final String FALLBACK_MIME_TYPE = "image/*";
+    /** Matches the authority declared in the library's AndroidManifest.xml. */
+    static final String FILE_PROVIDER_AUTHORITY_SUFFIX = ".rnshareimage.fileprovider";
 
     private final ReactApplicationContext reactContext;
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -312,7 +314,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
         output.flush();
     }
 
-    private String getFilenameFromUrl(String url, @Nullable String contentType) {
+    static String getFilenameFromUrl(String url, @Nullable String contentType) {
         String filename = url.substring(url.lastIndexOf('/') + 1);
         int queryIndex = filename.indexOf('?');
         if (queryIndex >= 0) {
@@ -333,7 +335,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
     }
 
     /** Keeps letters, digits, dots, dashes and underscores, so a name can't point outside the folder. */
-    private static String sanitizeFilename(@Nullable String name, String fallback) {
+    static String sanitizeFilename(@Nullable String name, String fallback) {
         String cleaned = name == null ? "" : name.replaceAll("[^A-Za-z0-9._-]", "_").replaceAll("^\\.+", "");
         return cleaned.isEmpty() ? fallback : cleaned;
     }
@@ -349,7 +351,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
         return lastSegment != null ? getMimeTypeFromName(lastSegment) : FALLBACK_MIME_TYPE;
     }
 
-    private static String getMimeTypeFromName(String name) {
+    static String getMimeTypeFromName(String name) {
         int dot = name.lastIndexOf('.');
         if (dot >= 0) {
             String extension = name.substring(dot + 1).toLowerCase(Locale.ROOT);
@@ -397,7 +399,7 @@ public class RNShareImage extends NativeRNShareImageSpec {
     private Uri getShareableUri(File file) {
         return FileProvider.getUriForFile(
             reactContext,
-            reactContext.getPackageName() + ".rnshareimage.fileprovider",
+            reactContext.getPackageName() + FILE_PROVIDER_AUTHORITY_SUFFIX,
             file
         );
     }

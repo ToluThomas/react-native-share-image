@@ -62,7 +62,7 @@
     "src",
     "android/build.gradle",
     "android/gradle.properties",
-    "android/src",
+    "android/src/main",
     "ios/*.h",
     "ios/*.mm",
     "react-native-share-image.podspec",

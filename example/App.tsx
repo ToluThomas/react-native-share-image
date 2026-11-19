@@ -1,32 +1,81 @@
-import React from 'react';
-import { Button, StyleSheet, Text, View, Image, StatusBar } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  StatusBar,
+  Linking,
+} from 'react-native';
 import { shareScreenshot, shareImageFromUri } from 'react-native-share-image';
 
+const REMOTE_IMAGE_URL = 'https://reactnative.dev/img/tiny_logo.png';
+
+// Opening shareimageexample://share-image?uri=<encoded uri> shares that image.
+// The end-to-end tests use it to share a local file they place on the device.
+const DEEP_LINK_PREFIX = 'shareimageexample://share-image?uri=';
+
 function App(): React.JSX.Element {
+  const [status, setStatus] = useState('Ready');
+
+  // Shows the outcome of each share so tests (and people) can see what happened.
+  const track = useCallback((share: Promise<void>) => {
+    setStatus('Sharing');
+    share
+      .then(() => setStatus('Shared'))
+      .catch((error: { code?: string; message?: string }) =>
+        setStatus(`Error: ${error.code ?? error.message ?? 'unknown'}`),
+      );
+  }, []);
+
+  const shareFromUri = useCallback(
+    (imageUri: string) =>
+      track(
+        shareImageFromUri({
+          imageUri,
+          message: 'Check out this image!',
+          shareTitle: 'Share Image',
+        }),
+      ),
+    [track],
+  );
+
+  useEffect(() => {
+    const handleUrl = (url?: string | null) => {
+      if (url?.startsWith(DEEP_LINK_PREFIX)) {
+        shareFromUri(decodeURIComponent(url.slice(DEEP_LINK_PREFIX.length)));
+      }
+    };
+    Linking.getInitialURL().then(handleUrl);
+    const subscription = Linking.addEventListener('url', ({ url }) =>
+      handleUrl(url),
+    );
+    return () => subscription.remove();
+  }, [shareFromUri]);
+
   const handleShareScreenshot = () => {
-    shareScreenshot({
-      message: 'Check out this screenshot!',
-      filename: 'screenshot',
-      shareTitle: 'Share Screenshot',
-    });
+    track(
+      shareScreenshot({
+        message: 'Check out this screenshot!',
+        filename: 'screenshot',
+        shareTitle: 'Share Screenshot',
+      }),
+    );
   };
 
   const handleSharePartialScreenshot = () => {
-    shareScreenshot({
-      id: 'captureArea',
-      message: 'Check out this view!',
-      filename: 'partialScreen',
-      shareTitle: 'Share View',
-    });
+    track(
+      shareScreenshot({
+        id: 'captureArea',
+        message: 'Check out this view!',
+        filename: 'partialScreen',
+        shareTitle: 'Share View',
+      }),
+    );
   };
 
-  const handleShareImage = () => {
-    shareImageFromUri({
-      imageUri: 'https://reactnative.dev/img/tiny_logo.png',
-      message: 'Check out this image!',
-      shareTitle: 'Share Image',
-    });
-  };
+  const handleShareImage = () => shareFromUri(REMOTE_IMAGE_URL);
 
   return (
     <View style={styles.container}>
@@ -37,10 +86,7 @@ function App(): React.JSX.Element {
       </View>
 
       <View nativeID="captureArea" style={styles.captureArea}>
-        <Image
-          source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-          style={styles.logo}
-        />
+        <Image source={{ uri: REMOTE_IMAGE_URL }} style={styles.logo} />
         <Text style={styles.captureText}>This view can be captured</Text>
         <Text style={styles.captureSubtext}>Using nativeID="captureArea"</Text>
       </View>
@@ -48,6 +94,7 @@ function App(): React.JSX.Element {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
+            testID="share-full-screenshot"
             title="Share Full Screenshot"
             onPress={handleShareScreenshot}
           />
@@ -55,15 +102,24 @@ function App(): React.JSX.Element {
 
         <View style={styles.buttonWrapper}>
           <Button
+            testID="share-partial-screenshot"
             title="Share Partial Screenshot"
             onPress={handleSharePartialScreenshot}
           />
         </View>
 
         <View style={styles.buttonWrapper}>
-          <Button title="Share Image from URI" onPress={handleShareImage} />
+          <Button
+            testID="share-image-from-uri"
+            title="Share Image from URI"
+            onPress={handleShareImage}
+          />
         </View>
       </View>
+
+      <Text testID="share-status" style={styles.status}>
+        {status}
+      </Text>
     </View>
   );
 }
@@ -120,6 +176,11 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginVertical: 8,
+  },
+  status: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#666',
   },
 });
 

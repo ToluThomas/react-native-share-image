@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# Starts the example app and waits until JavaScript has rendered it.
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: share-status
+      text: Ready
+    timeout: 120000

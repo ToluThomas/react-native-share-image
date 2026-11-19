@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+name: Share local file image
+---
+# run.sh copies fixtures/local-test.jpg onto the device and passes its file:// URI
+# as a deep link in LOCAL_IMAGE_LINK.
+- runFlow: subflows/launch.yaml
+- openLink: ${LOCAL_IMAGE_LINK}
+- runFlow: subflows/confirm-open-link.yaml
+- runFlow:
+    file: subflows/assert-share-sheet.yaml
+    env:
+      SHARED_NAME: local-test
+      SHARED_TYPE: JPEG Image
+- runFlow: subflows/close-share-sheet.yaml
+- extendedWaitUntil:
+    visible:
+      id: share-status
+      text: Shared
+    timeout: 10000

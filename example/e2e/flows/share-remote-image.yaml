@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+name: Share remote image
+---
+# run.sh serves fixtures/remote-test.png from a local web server, so this doesn't
+# depend on the internet, and passes its http:// URL as a deep link in REMOTE_IMAGE_LINK.
+- runFlow: subflows/launch.yaml
+- openLink: ${REMOTE_IMAGE_LINK}
+- runFlow: subflows/confirm-open-link.yaml
+- runFlow:
+    file: subflows/assert-share-sheet.yaml
+    env:
+      SHARED_NAME: remote-test
+      SHARED_TYPE: PNG Image
+- runFlow: subflows/close-share-sheet.yaml
+- extendedWaitUntil:
+    visible:
+      id: share-status
+      text: Shared
+    timeout: 10000

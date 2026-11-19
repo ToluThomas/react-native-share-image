@@ -1,0 +1,28 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - back
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # The iOS share sheet has no close button; tapping outside it dismisses it.
+      # Tap near the top of the screen: the dismiss region's centre can fall on the sheet itself.
+      # A tap while the sheet is still animating in is ignored, so wait and retry.
+      - repeat:
+          times: 3
+          while:
+            visible:
+              id: LP.CaptionBar.TopCaption
+          commands:
+            - waitForAnimationToEnd:
+                timeout: 5000
+            - tapOn:
+                point: 50%,15%
+            - waitForAnimationToEnd:
+                timeout: 5000
+      - assertNotVisible:
+          id: LP.CaptionBar.TopCaption

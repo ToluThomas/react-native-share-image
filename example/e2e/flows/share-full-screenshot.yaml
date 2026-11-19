@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+name: Share full screenshot
+---
+- runFlow: subflows/launch.yaml
+- tapOn:
+    id: share-full-screenshot
+- runFlow:
+    file: subflows/assert-share-sheet.yaml
+    env:
+      SHARED_NAME: screenshot
+      SHARED_TYPE: PNG Image
+- runFlow: subflows/close-share-sheet.yaml
+- extendedWaitUntil:
+    visible:
+      id: share-status
+      text: Shared
+    timeout: 10000
