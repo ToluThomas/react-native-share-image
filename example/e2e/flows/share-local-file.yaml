@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Share local file:// image
+name: Share local file image
 ---
 # run.sh copies fixtures/local-test.jpg onto the device and passes its file:// URI
 # as a deep link in LOCAL_IMAGE_LINK.

@@ -42,6 +42,18 @@ case "$PLATFORM" in
     ;;
 esac
 
+# Build the JavaScript bundle once before any flow runs. On a fresh machine (always in CI)
+# Metro's first build takes minutes, which would otherwise count against the first flow.
+METRO_URL="http://localhost:8081"
+for _ in $(seq 1 120); do
+  curl -fs "$METRO_URL/status" | grep -q "packager-status:running" && break
+  sleep 2
+done
+echo "Building the JavaScript bundle for $PLATFORM..."
+curl -fs --max-time 900 -o /dev/null \
+  "$METRO_URL/index.bundle?platform=$PLATFORM&dev=true&minify=false" \
+  || { echo "Metro isn't running on $METRO_URL or failed to build the bundle" >&2; exit 1; }
+
 # Serve the fixtures over HTTP for the remote-image flow; stopped when the script exits.
 python3 -m http.server "$IMAGE_SERVER_PORT" --bind 127.0.0.1 --directory "$DIR/fixtures" >/dev/null 2>&1 &
 IMAGE_SERVER_PID=$!
